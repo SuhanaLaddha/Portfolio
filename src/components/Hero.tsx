@@ -2,7 +2,7 @@ import React from 'react';
 
 const Hero: React.FC = () => {
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative">
+    <section id="home" className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative pt-24 md:pt-20">
       <div className="max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Side - Text */}
@@ -35,7 +35,7 @@ const Hero: React.FC = () => {
               <div className="w-80 h-80 md:w-96 md:h-96 relative">
                 {/* Profile Image Container */}
                 <div className="absolute inset-8 rounded-full bg-gray-800 overflow-hidden shadow-2xl flex items-center justify-center neon-border">
-                  <img src="/Assets/mypic.jpg" alt="Profile" className="w-full h-full object-cover" />
+                  <img src="/mypic.jpg" alt="Profile" className="w-full h-full object-cover" />
                 </div>
               </div>
             </div>
