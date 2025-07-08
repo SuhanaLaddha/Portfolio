@@ -34,8 +34,8 @@ const Hero: React.FC = () => {
             <div className="relative">
               <div className="w-80 h-80 md:w-96 md:h-96 relative">
                 {/* Profile Image Container */}
-                <div className="absolute inset-8 rounded-full bg-gray-800 overflow-hidden shadow-2xl flex items-center justify-center">
-                  <img src={require('../../Assets/mypic.jpg')} alt="Profile" className="w-full h-full object-cover" />
+                <div className="absolute inset-8 rounded-full bg-gray-800 overflow-hidden shadow-2xl flex items-center justify-center neon-border">
+                  <img src="/Assets/mypic.jpg" alt="Profile" className="w-full h-full object-cover" />
                 </div>
               </div>
             </div>
