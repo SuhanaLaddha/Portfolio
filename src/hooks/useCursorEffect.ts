@@ -2,91 +2,83 @@ import { useEffect } from 'react';
 
 export const useCursorEffect = () => {
   useEffect(() => {
+    // Create custom cursor element
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+
     let mouseX = 0;
     let mouseY = 0;
-    let particles: Array<{
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      life: number;
-      maxLife: number;
-      size: number;
-      color: string;
-    }> = [];
-
-    const colors = ['#f89bf1', '#d5e9ea', '#b3cfd8', '#fedeac', '#d29c8a'];
-
-    const createParticle = (x: number, y: number) => {
-      return {
-        x,
-        y,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
-        life: 30,
-        maxLife: 30,
-        size: Math.random() * 4 + 2,
-        color: colors[Math.floor(Math.random() * colors.length)]
-      };
-    };
-
-    const canvas = document.createElement('canvas');
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = '9999';
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    document.body.appendChild(canvas);
-
-    const ctx = canvas.getContext('2d')!;
+    let cursorX = 0;
+    let cursorY = 0;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+    };
 
-      // Create new particles
-      for (let i = 0; i < 3; i++) {
-        particles.push(createParticle(mouseX, mouseY));
+    const handleMouseEnter = () => {
+      cursor.style.opacity = '1';
+    };
+
+    const handleMouseLeave = () => {
+      cursor.style.opacity = '0';
+    };
+
+    const handleMouseDown = () => {
+      cursor.classList.add('click');
+    };
+
+    const handleMouseUp = () => {
+      cursor.classList.remove('click');
+    };
+
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'BUTTON' || target.tagName === 'A' || target.closest('button') || target.closest('a')) {
+        cursor.classList.add('hover');
+      } else {
+        cursor.classList.remove('hover');
       }
     };
 
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    // Smooth cursor animation
+    const animateCursor = () => {
+      const ease = 0.15;
+      cursorX += (mouseX - cursorX) * ease;
+      cursorY += (mouseY - cursorY) * ease;
+      
+      cursor.style.left = cursorX + 'px';
+      cursor.style.top = cursorY + 'px';
+      
+      requestAnimationFrame(animateCursor);
     };
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Hide default cursor
+    document.body.style.cursor = 'none';
 
-      particles = particles.filter(particle => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        particle.life--;
-
-        const alpha = particle.life / particle.maxLife;
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = particle.color;
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fill();
-
-        return particle.life > 0;
-      });
-
-      requestAnimationFrame(animate);
-    };
-
+    // Event listeners
     document.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', handleResize);
-    animate();
+    document.addEventListener('mouseenter', handleMouseEnter);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mouseover', handleMouseOver);
+
+    // Start animation
+    animateCursor();
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-      if (canvas.parentNode) {
-        canvas.parentNode.removeChild(canvas);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mouseover', handleMouseOver);
+      
+      document.body.style.cursor = 'auto';
+      if (cursor.parentNode) {
+        cursor.parentNode.removeChild(cursor);
       }
     };
   }, []);
